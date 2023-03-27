@@ -1,82 +1,48 @@
-const userForm = document.getElementById('user-form')
-
-const retriveEntries = () => {
-  let entries = localStorage.getItem('user-entries')
-  if (entries) {
-    entries = JSON.parse(entries)
-  } else {
-    entries = []
+const http = require('http')
+const fs = require('fs')
+const args = require('minimist')(process.argv.slice(1), {
+  alias: {
+    p: 'port'
+  },
+  default: {
+    port: 3000
   }
-  return entries
-}
+})
 
-const userEntries = retriveEntries()
+let homeContent = ''
+let projectContent = ''
+let registerPage = ''
 
-const displayEntries = () => {
-  const entries = retriveEntries()
+fs.readFile('home.html', (err, home) => {
+  if (err) throw err
+  homeContent = home
+})
 
-  const data = entries.map((entry) => {
-    const nameCell = `<td>${entry.name}</td>`
-    const emailCell = `<td>${entry.email}</td>`
-    const passwordCell = `<td>${entry.password}</td>`
-    const dobCell = `<td>${entry.dob}</td>`
-    const acceptedTermsAndConditionsCell = `<td>${entry.acceptedTermsAndConditions}</td>`
+fs.readFile('project.html', (err, project) => {
+  if (err) throw err
+  projectContent = project
+})
 
-    const row = `<tr>${nameCell} ${emailCell} ${passwordCell} ${dobCell} ${acceptedTermsAndConditionsCell}</tr>`
-    return row
-  }).join('\n')
+fs.readFile('register.html', (err, register) => {
+  if (err) throw err
+  registerPage = register
+})
 
-  const table = `<table><tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Password</th>
-            <th>Dob</th>
-            <th>Accepted terms?</th>
-    </tr> ${data} </table>`
-  const details = document.getElementById('table')
-  details.innerHTML = table
-}
-const saveUserForm = (event) => {
-  event.preventDefault()
-
-  const name = document.getElementById('name').value
-  const email = document.getElementById('email').value
-  const password = document.getElementById('password').value
-  const dob = document.getElementById('dob').value
-  const acceptedTermsAndConditions = document.getElementById('acceptTerms').checked
-
-  const currentYr = new Date().getFullYear()
-  const birthyr = dob.split('-')
-  const year = birthyr[0]
-
-  const age = currentYr - year
-  const isValid = (age) => {
-    if (age > 55 || age < 18) {
-      return false
-    } else {
-      return true
-    }
+http.createServer((request, response) => {
+  const url = request.url
+  response.writeHeader(200, { 'Content-Type': 'text/html' })
+  switch (url) {
+    case '/project':
+      response.write(projectContent)
+      response.end()
+      break
+    case '/register':
+      response.write(registerPage)
+      response.end()
+      break
+    default:
+      response.write(homeContent)
+      response.end()
+      break
   }
-
-  if (!isValid(age)) {
-    document.getElementById('dob').style = 'border: 2px solid red;'
-    return alert('You must be between age 18 and 55.\nYou are not elligible!')
-  } else {
-    document.getElementById('dob').style = 'border: 2px solid #cccc;'
-    const entry = {
-      name,
-      email,
-      password,
-      dob,
-      acceptedTermsAndConditions
-    }
-
-    userEntries.push(entry)
-
-    localStorage.setItem('user-entries', JSON.stringify(userEntries))
-    displayEntries()
-  }
-}
-
-userForm.addEventListener('submit', saveUserForm)
-displayEntries()
+}).listen(args.port)
