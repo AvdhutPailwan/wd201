@@ -1,59 +1,48 @@
-// const http = require('http')
-// const fs = require('fs')
+const http = require('http')
+const fs = require('fs')
+const args = require('minimist')(process.argv.slice(1), {
+  alias: {
+    p: 'port'
+  },
+  default: {
+    port: 3000
+  }
+})
 
-// // Create an HTTP server
-// const server = http.createServer((_req, res) => {
-//   // Create a readable stream to read the contents of the file
-//   const stream = fs.createReadStream('sample.txt')
-//   // Pipe the contents of the file to the response stream
-//   stream.pipe(res)
+let homeContent = ''
+let projectContent = ''
+let registerPage = ''
 
-//   // Alternatively, you can use fs.readFile() to read the contents of the file
-//   // and send it as the response using res.end()
-//   // fs.readFile('sample.txt', (_err, data) => {
-//   //   res.end(data)
-//   // })
-// })
+fs.readFile('home.html', (err, home) => {
+  if (err) throw err
+  homeContent = home
+})
 
-// // Listen on port 3000
-// server.listen(3000)
+fs.readFile('project.html', (err, project) => {
+  if (err) throw err
+  projectContent = project
+})
 
-// ------------------------------------------------------------------------------------------------
+fs.readFile('register.html', (err, register) => {
+  if (err) throw err
+  registerPage = register
+})
 
-// // Import the 'readline' module
-// const readline = require('readline')
-
-// // Create a readline interface for reading input from the console
-// const lineDetail = readline.createInterface({
-//   input: process.stdin, // Set the input stream to 'stdin' (standard input)
-//   output: process.stdout // Set the output stream to 'stdout' (standard output)
-// })
-
-// // Ask the user for their name and wait for their input
-// lineDetail.question('Please provide your name - ', (name) => {
-//   // Once the user provides their name, print a greeting message with their name
-//   console.log(`Hi ${name}!`)
-
-//   // Close the readline interface to stop waiting for input
-//   lineDetail.close()
-// })
-
-// const args = require('minimist')(process.argv.slice(2))
-
-// console.log(args)
-
-// const args = require('minimist')(process.argv.slice(2), {
-//   alias: {
-//     n: 'name',
-//     a: 'age'
-//   }
-// })
-
-// console.log(args)
-
-// const args = require('minimist')(process.argv.slice(2), {
-//   default: {
-//     greeting: 'Hello'
-//   }
-// })
-// console.log(args)
+http.createServer((request, response) => {
+  const url = request.url
+  response.writeHeader(200, { 'Content-Type': 'text/html' })
+  switch (url) {
+    case '/project':
+      response.write(projectContent)
+      response.end()
+      break
+    case '/register':
+      response.write(registerPage)
+      response.end()
+      break
+    default:
+      response.write(homeContent)
+      response.end()
+      break
+  }
+}).listen(args.port)

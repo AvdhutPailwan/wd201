@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="outer-box">
+        <div class="inner-box">
+            <header class="signup-header">
+                <h1>Registeration Form</h1>
+                <p>hardly takes a minute</p>
+            </header>
+            <main class="signup-body">
+                <form id="user-form">
+                    <p>
+                        <label for="name">
+                            Name<span class="red">*</span> :
+                        </label>
+                        <input type="text" name="name" id="name" placeholder="Enter your Full Name" required>
+                    </p>
+                    <p>
+                        <label for="email">
+                            email<span class="red">*</span> :
+                        </label>
+                        <input type="email" name="email" id="email" placeholder="Enter your email" required>
+                    </p>
+                    <p>
+                        <label for="password">
+                            Password<span class="red">*</span> :
+                        </label>
+                        <input type="password" name="password" id="password" placeholder="Enter your Password" required>
+                    </p>
+                    <p>
+                        <label for="dob">Date of Birth<span class="red">*</span> :</label>
+                        <input type="date" name="dob" id="dob" required>
+                    </p>
+                    <p id="checkbox">
+                        <input type="checkbox" name="acceptTerms" id="acceptTerms" required>
+                        <label for="acceptTerms">Accept terms and conditions<span class="red">*</span></label>
+                    </p>
+
+                    <p class="submit">
+                        
+                        <button type="submit" id="submit" value="submit" name="submit">submit</button>
+                    </p>
+                </form>
+            </main>
+
+        </div>
+        <div class="circle c1">
+
+        </div>
+        <div class="circle c2"></div>
+        <div class="entries">
+            <h3 class="center"><span>Entries</span></h3>
+            <div id="table"></div>
+        </div>
+        
+    </div>
+    <a href="/">&lt;- Back to home</a>
+<script src="register.js"></script>
+
+</body>
+
+</html>
