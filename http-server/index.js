@@ -23,7 +23,7 @@ fs.readFile('project.html', (err, project) => {
   projectContent = project
 })
 
-fs.readFile('register.html', (err, register) => {
+fs.readFile('registeration.html', (err, register) => {
   if (err) throw err
   registerPage = register
 })
