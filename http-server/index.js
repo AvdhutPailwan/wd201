@@ -36,7 +36,7 @@ http.createServer((request, response) => {
       response.write(projectContent)
       response.end()
       break
-    case '/register':
+    case '/registration':
       response.write(registerPage)
       response.end()
       break
