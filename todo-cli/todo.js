@@ -10,7 +10,7 @@ const todoList = () => {
   const overdue = () => {
     const over = []
     all.forEach(element => {
-      if (element.Date === yesterday && element.completed === false) {
+      if (element.dueDate === yesterday) {
         over.push(element)
       }
     })
@@ -22,7 +22,7 @@ const todoList = () => {
   const dueToday = () => {
     const todayDue = []
     all.forEach(element => {
-      if (element.Date === today && element.completed === false) {
+      if (element.dueDate === today) {
         todayDue.push(element)
       }
     })
@@ -34,7 +34,7 @@ const todoList = () => {
   const dueLater = () => {
     const laterDue = []
     all.forEach(element => {
-      if (element.Date === tomorrow && element.completed === false) {
+      if (element.dueDate === tomorrow) {
         laterDue.push(element)
       }
     })
@@ -80,8 +80,8 @@ const todoList = () => {
     dueToday,
     dueLater,
     toDisplayableList
-  }
-}
+  };
+};
 
 // ####################################### #
 // DO NOT CHANGE ANYTHING BELOW THIS LINE. #
