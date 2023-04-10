@@ -1,32 +1,29 @@
-const todoList = require('../todo')
+/* eslint-disable no-undef */
+const todoList = require("../todo");
 
-const {all, markAsComplete, add} = todoList()
+const { all, markAsComplete, add } = todoList();
 
-describe('TodoList Test Suite', () => {
+describe("TodoList Test Suite", () => {
   beforeAll(() => {
-    add(
-      {
-        title: 'Test todo',
-        completed: false,
-        dueDate: new Date().toISOString().slice(0, 10)
-      }
-    )
-  })
-  test('Should add new todo', () => {
-    const todoItemsCount = all.length
-    add(
-      {
-        title: 'Test todo',
-        completed: false,
-        dueDate: new Date().toISOString().slice(0, 10)
-      }
-    )
-    expect(all.length).toBe(todoItemsCount + 1)
-  })
+    add({
+      title: "Test todo",
+      completed: false,
+      dueDate: new Date().toISOString().slice(0, 10),
+    });
+  });
+  test("Should add new todo", () => {
+    const todoItemsCount = all.length;
+    add({
+      title: "Test todo",
+      completed: false,
+      dueDate: new Date().toISOString().slice(0, 10),
+    });
+    expect(all.length).toBe(todoItemsCount + 1);
+  });
 
-  test('Should mark a todo as complete', () => {
-    expect(all[0].completed).toBe(false)
-    markAsComplete(0)
-    expect(all[0].completed).toBe(true)
-  })
-})
+  test("Should mark a todo as complete", () => {
+    expect(all[0].completed).toBe(false);
+    markAsComplete(0);
+    expect(all[0].completed).toBe(true);
+  });
+});
