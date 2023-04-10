@@ -1,4 +1,17 @@
 /* eslint-disable no-undef */
+
+const formattedDate = (d) => {
+  return d.toISOString().split("T")[0];
+};
+const dateToday = new Date();
+const today = formattedDate(dateToday);
+const yesterday = formattedDate(
+  new Date(new Date().setDate(dateToday.getDate() - 1))
+);
+const tomorrow = formattedDate(
+  new Date(new Date().setDate(dateToday.getDate() + 1))
+);
+
 const todoList = () => {
   const all = [];
   const add = (todoItem) => {
