@@ -58,30 +58,51 @@ const todoList = () => {
   };
 
   const toDisplayableList = (list) => {
-    const output = [];
-    list.forEach((element, index) => {
-      if (element.dueDate === yesterday) {
-        if (element.completed === true) {
-          output.push("[x]" + " " + element.title + " " + element.dueDate);
-        } else {
-          output.push("[ ]" + " " + element.title + " " + element.dueDate);
-        }
-      } else if (element.dueDate === today) {
-        delete element.dueDate;
-        if (element.completed === true) {
-          output.push("[x]" + " " + element.title);
-        } else {
-          output.push("[ ]" + " " + element.title);
-        }
-      } else if (element.dueDate === tomorrow) {
-        if (element.completed === true) {
-          output.push("[x]" + " " + element.title + " " + element.dueDate);
-        } else {
-          output.push("[ ]" + " " + element.title + " " + element.dueDate);
-        }
-      }
-    });
-    return output.reverse().join("\n");
+    /*
+
+    This is old code
+
+    // const output = []
+    // list.forEach((element, index) => {
+    //   if (element.dueDate === yesterday) {
+    //     if (element.completed === true) {
+    //       output.push('[x]' + ' ' + element.title + ' ' + element.dueDate)
+    //     } else {
+    //       output.push('[ ]' + ' ' + element.title + ' ' + element.dueDate)
+    //     }
+    //   } else if (element.dueDate === today) {
+    //     delete element.dueDate
+    //     if (element.completed === true) {
+    //       output.push('[x]' + ' ' + element.title)
+    //     } else {
+    //       output.push('[ ]' + ' ' + element.title)
+    //     }
+    //   } else if (element.dueDate === tomorrow) {
+    //     if (element.completed === true) {
+    //       output.push('[x]' + ' ' + element.title + ' ' + element.dueDate)
+    //     } else {
+    //       output.push('[ ]' + ' ' + element.title + ' ' + element.dueDate)
+    //     }
+    //   }
+    // })
+    // return output.reverse().join('\n')
+    */
+
+    // new code
+
+    const output = list
+      .map((item) => {
+        return (
+          (item.completed ? "[x]" : "[ ]") +
+          " " +
+          item.title +
+          (item.dueDate === new Date().toISOString().slice(0, 10)
+            ? ""
+            : " " + item.dueDate)
+        ).trim();
+      })
+      .join("\n");
+    return output;
     // Format the To-Do list here, and return the output string
     // as per the format given above.
   };

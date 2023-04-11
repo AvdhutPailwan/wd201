@@ -44,14 +44,36 @@ describe("TodoList Test Suite", () => {
   });
 
   test("Should retrive the items with today's due date", () => {
-    expect(dueToday().length).toBe(2);
+    const dueTodayTodoItemsCount = dueToday().length;
+    add({
+      title: "test due today",
+      completed: false,
+      dueDate: new Date().toISOString().split("T")[0],
+    });
+    expect(dueToday().length).toEqual(dueTodayTodoItemsCount + 1);
   });
 
   test("Should retrive the items with overdue due date", () => {
-    expect(overdue().length).toBe(1);
+    const overDueTodoItemsCount = overdue().length;
+    add({
+      title: "test overdue",
+      completed: false,
+      dueDate: new Date(new Date().setDate(new Date().getDate() - 1))
+        .toISOString()
+        .split("T")[0],
+    });
+    expect(overdue().length).toEqual(overDueTodoItemsCount + 1);
   });
 
   test("Should retrive the items with due date having a later date", () => {
-    expect(dueLater().length).toBe(1);
+    const dueLaterTodoItemsCount = dueLater().length;
+    add({
+      title: "test due later",
+      completed: false,
+      dueDate: new Date(new Date().setDate(new Date().getDate() + 1))
+        .toISOString()
+        .split("T")[0],
+    });
+    expect(dueLater().length).toEqual(dueLaterTodoItemsCount + 1);
   });
 });
