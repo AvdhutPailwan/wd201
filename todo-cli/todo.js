@@ -22,74 +22,26 @@ const todoList = () => {
   };
 
   const overdue = () => {
-    const over = [];
-    all.forEach((element) => {
-      if (element.dueDate === yesterday) {
-        over.push(element);
-      }
-    });
-    return over.reverse();
+    return all.filter((item) => item.dueDate === yesterday);
     // Write the date check condition here and return the array
     // of overdue items accordingly.
   };
 
   const dueToday = () => {
-    const todayDue = [];
-    all.forEach((element) => {
-      if (element.dueDate === today) {
-        todayDue.push(element);
-      }
-    });
-    return todayDue.reverse();
+    return all.filter((item) => item.dueDate === today);
+
     // Write the date check condition here and return the array
     // of todo items that are due today accordingly.
   };
 
   const dueLater = () => {
-    const laterDue = [];
-    all.forEach((element) => {
-      if (element.dueDate === tomorrow) {
-        laterDue.push(element);
-      }
-    });
-    return laterDue.reverse();
+    return all.filter((item) => item.dueDate === tomorrow);
+
     // Write the date check condition here and return the array
     // of todo items that are due later accordingly.
   };
 
   const toDisplayableList = (list) => {
-    /*
-
-    This is old code
-
-    // const output = []
-    // list.forEach((element, index) => {
-    //   if (element.dueDate === yesterday) {
-    //     if (element.completed === true) {
-    //       output.push('[x]' + ' ' + element.title + ' ' + element.dueDate)
-    //     } else {
-    //       output.push('[ ]' + ' ' + element.title + ' ' + element.dueDate)
-    //     }
-    //   } else if (element.dueDate === today) {
-    //     delete element.dueDate
-    //     if (element.completed === true) {
-    //       output.push('[x]' + ' ' + element.title)
-    //     } else {
-    //       output.push('[ ]' + ' ' + element.title)
-    //     }
-    //   } else if (element.dueDate === tomorrow) {
-    //     if (element.completed === true) {
-    //       output.push('[x]' + ' ' + element.title + ' ' + element.dueDate)
-    //     } else {
-    //       output.push('[ ]' + ' ' + element.title + ' ' + element.dueDate)
-    //     }
-    //   }
-    // })
-    // return output.reverse().join('\n')
-    */
-
-    // new code
-
     const output = list
       .map((item) => {
         return (
@@ -103,6 +55,7 @@ const todoList = () => {
       })
       .join("\n");
     return output;
+
     // Format the To-Do list here, and return the output string
     // as per the format given above.
   };
