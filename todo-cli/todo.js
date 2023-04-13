@@ -1,16 +1,6 @@
 /* eslint-disable no-undef */
 
-const formattedDate = (d) => {
-  return d.toISOString().split("T")[0];
-};
-const dateToday = new Date();
-const today = formattedDate(dateToday);
-const yesterday = formattedDate(
-  new Date(new Date().setDate(dateToday.getDate() - 1))
-);
-const tomorrow = formattedDate(
-  new Date(new Date().setDate(dateToday.getDate() + 1))
-);
+const today = new Date().toISOString().split("T")[0];
 
 const todoList = () => {
   const all = [];
@@ -22,7 +12,7 @@ const todoList = () => {
   };
 
   const overdue = () => {
-    return all.filter((item) => item.dueDate === yesterday);
+    return all.filter((item) => item.dueDate < today);
     // Write the date check condition here and return the array
     // of overdue items accordingly.
   };
@@ -35,7 +25,7 @@ const todoList = () => {
   };
 
   const dueLater = () => {
-    return all.filter((item) => item.dueDate === tomorrow);
+    return all.filter((item) => item.dueDate > today);
 
     // Write the date check condition here and return the array
     // of todo items that are due later accordingly.
