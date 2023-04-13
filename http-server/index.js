@@ -18,6 +18,8 @@ const args = require('minimist')(process.argv.slice(1), {
 let homeContent = ''
 let projectContent = ''
 let registerPage = ''
+let registerPageStyle = ''
+let registerPageScript = ''
 
 // Read the contents of each HTML page into its respective variable
 fs.readFile('home.html', (err, home) => {
@@ -33,6 +35,16 @@ fs.readFile('project.html', (err, project) => {
 fs.readFile('registration.html', (err, register) => {
   if (err) throw err
   registerPage = register
+})
+
+fs.readFile('style.css', (err, style) => {
+  if (err) throw err
+  registerPageStyle = style
+})
+
+fs.readFile('register.js', (err, script) => {
+  if (err) throw err
+  registerPageScript = script
 })
 
 // Create an HTTP server that listens for requests on the specified port
@@ -53,6 +65,16 @@ http.createServer((request, response) => {
     case '/registration':
       // If the URL is '/registration', send the registration page content
       response.write(registerPage)
+      response.end()
+      break
+    case '/style.css':
+      response.writeHeader(200, { 'Content-Type': 'text/css' })
+      response.write(registerPageStyle)
+      response.end()
+      break
+    case '/register.js':
+      response.writeHeader(200, { 'Content-Type': 'text/javascript' })
+      response.write(registerPageScript)
       response.end()
       break
     default:
