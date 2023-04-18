@@ -14,9 +14,9 @@ const getJSDate = (days) => {
   if (!Number.isInteger(days)) {
     throw new Error("Need to pass an integer as days");
   }
-  const today = new Date();
-  const oneDay = 60 * 60 * 24 * 1000;
-  return new Date(today.getTime() + days * oneDay);
+  return new Date(new Date().setDate(new Date().getDate() + days))
+    .toISOString()
+    .slice(0, 10);
 };
 (async () => {
   const { title, dueInDays } = argv;
