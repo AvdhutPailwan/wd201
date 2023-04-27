@@ -4,6 +4,14 @@ const { Todo } = require("./models");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
+// Set EJS as view engine
+
+app.set("view engine", "ejs");
+
+app.get("/", (request, response) => {
+  response.render("index");
+});
+
 // eslint-disable-next-line no-unused-vars
 app.get("/todos", async (request, response) => {
   console.log("Todo list");
