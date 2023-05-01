@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       return this.update({ completed: true });
     }
 
-    static listTodos() {
+    static getTodos() {
       return this.findAll();
     }
   }
