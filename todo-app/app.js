@@ -74,12 +74,12 @@ app.put("/todos/:id/markAsCompleted", async (request, response) => {
 // eslint-disable-next-line no-unused-vars
 app.delete("/todos/:id", async (request, response) => {
   console.log("Delete a todo by ID: ", request.params.id);
-  const updatedTodo = await Todo.destroy({
-    where: {
-      id: request.params.id,
-    },
-  });
-  return response.send(updatedTodo ? true : false);
+  try {
+    await Todo.remove(request.params.id);
+    return response.json({ success: true });
+  } catch (error) {
+    return response.status(422).json(error);
+  }
 });
 
 // app.listen(3000, () => {
