@@ -5,6 +5,20 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/styles.css">
+  <script>
+    function updateTodo(id) {
+      fetch(`/todos/${id}/markAsCompleted`, {
+        method: 'put',
+        headers: {'Content-Type': 'application/json'}
+      })
+      .then((res) => {
+        if (res.ok){
+          window.location.reload();
+        }
+      })
+      .catch((err) => console.error(err))
+    }
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <title>To-Do Manager</title>
 </head>
@@ -22,7 +36,9 @@
 
 <!-- List Todos  and delete-->
 
-      <%- include('todos.ejs') %>
+      <%- include('todos.ejs', {content: 'Overdue', data: overdue, id:'overdue'}) %>
+      <%- include('todos.ejs', {content: 'Due Today', data: dueToday, id:'due-today'}) %>
+      <%- include('todos.ejs', {content: 'Due Later', data: dueLater, id:'due-later'}) %>
 
     </div>
   </div>
