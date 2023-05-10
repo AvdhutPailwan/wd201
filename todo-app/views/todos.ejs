@@ -4,7 +4,7 @@
     <% for( var i = 0; i< data.length; i++ ) { %>
       <li class="Todo-Item">
         <div class="flex w-fit my-2 px-2 py-1 items-center rounded hover:bg-purple-50">
-          <input type="checkbox" <%= data[i].completed? "checked":"" %> onclick="updateTodo(<%= data[i].id %>)" id="todo-checkbox-<%= data[i].id %>" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border"> 
+          <input type="checkbox" <%= data[i].completed? "checked":"" %> onclick="updateTodo(<%= data[i].id %>, <%= data[i].completed %>)" id="todo-checkbox-<%= data[i].id %>" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border"> 
           <label for="todo-checkbox-<%= data[i].id %>" class="ml-2 text-sm text-gray-600 cursor-pointer"><%= data[i].title %></label> 
           <!-- Delete Todos -->
           <a href="#" class="ml-2 hidden trash-icon" onclick="deleteTodo(<%= data[i].id %>)" >

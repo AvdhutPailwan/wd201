@@ -11,12 +11,13 @@
       .querySelector('meta[name="csrf-token"]')
       .getAttribute('content')
 
-    function updateTodo(id) {
-      fetch(`/todos/${id}/markAsCompleted`, {
+    function updateTodo(id, completed) {
+      fetch(`/todos/${id}`, {
         method: 'put',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          "_csrf": token
+          "_csrf": token,
+          completed
         })
       })
       .then((res) => {
@@ -41,6 +42,18 @@
         }
       })
       .catch ((err) => console.error(err)) 
+    }
+
+    function validateForm() {
+      // Get the input values
+      var title = document.getElementById('title').value;
+      var date = document.getElementById('dueDate').value;
+      
+      // Check if any field is empty
+      if (title === '' || date === '') {
+        alert('Please fill in all the fields.');
+        return false;
+      }
     }
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
