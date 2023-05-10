@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.lt]: new Date().toISOString().split("T")[0] },
+          completed: false,
         },
       });
     }
@@ -44,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.eq]: new Date().toISOString().split("T")[0] },
+          completed: false,
         },
       });
     }
@@ -52,6 +54,15 @@ module.exports = (sequelize, DataTypes) => {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.gt]: new Date().toISOString().split("T")[0] },
+          completed: false,
+        },
+      });
+    }
+
+    static async getCompletedItems() {
+      return await Todo.findAll({
+        where: {
+          completed: true,
         },
       });
     }
