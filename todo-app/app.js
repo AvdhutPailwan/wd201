@@ -1,5 +1,5 @@
 const express = require("express");
-var csrf = require("csurf");
+var csrf = require("tiny-csrf");
 const app = express();
 var cookieParser = require("cookie-parser");
 const { Todo } = require("./models");
@@ -8,7 +8,7 @@ const path = require("path");
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("shh! some secreat string"));
-app.use(csrf({ cookie: true }));
+app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
 
 // Set EJS as view engine
 
@@ -67,8 +67,12 @@ app.post("/todos", async (request, response) => {
 app.put("/todos/:id/markAsCompleted", async (request, response) => {
   console.log("We have to update a todo with ID:", request.params.id);
   const todo = await Todo.findByPk(request.params.id);
+  //console.log(todo.dataValues.completed)
   try {
-    const updatedTodo = await todo.markAsCompleted();
+    // const updatedTodo = await todo.markAsCompleted();
+    const updatedTodo = await todo.setCompletionStatus(
+      todo.dataValues.completed
+    );
     return response.json(updatedTodo);
   } catch (error) {
     console.log(error);
