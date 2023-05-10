@@ -22,7 +22,7 @@ describe("Todo test suite", () => {
       dueDate: new Date().toISOString(),
       completed: false,
     });
-    expect(response.statusCode).toBe(302);
+    expect(response.statusCode).toBe(403);
   });
 
   // test("Mark a todo as complete", async () => {
