@@ -3,6 +3,7 @@ var csrf = require("tiny-csrf");
 const passport = require("passport");
 const connectEnsureLogin = require("connect-ensure-login");
 const session = require("express-session");
+const flash = require("connect-flash");
 const LocalStrategy = require("passport-local");
 const app = express();
 var cookieParser = require("cookie-parser");
@@ -17,15 +18,19 @@ const { read } = require("fs");
 const saltRounds = 10;
 app.use(bodyParser.json());
 
+// eslint-disable-next-line no-undef
+app.set("views", path.join(__dirname, "views"));
+// eslint-disable-next-line no-undef
+app.use(express.static(path.join(__dirname, "public")));
 // Set EJS as view engine
+
+app.use(flash());
 
 app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("shh! some secreat string"));
 app.use(csrf("this_should_be_32_character_long", ["POST", "PUT", "DELETE"]));
-// eslint-disable-next-line no-undef
-app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
     secret: "my-super-secret-key-215456454158721",
@@ -39,6 +44,10 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(function (request, response, next) {
+  response.locals.messages = request.flash();
+  next();
+});
 
 passport.use(
   new LocalStrategy(
@@ -57,7 +66,7 @@ passport.use(
           if (result) {
             return done(null, user);
           } else {
-            return done("invalid password");
+            return done(null, false, { message: "Invalid Password!" });
           }
         })
         .catch((error) => {
@@ -95,6 +104,15 @@ app.get("/signup", (request, response) => {
 });
 
 app.post("/users", async (request, response) => {
+  if (request.body.firstName.length == 0) {
+    request.flash("error", "Invalid First Name!");
+    return response.redirect("/signup");
+  }
+  if (request.body.email.length == 0) {
+    request.flash("error", "Invalid Email!");
+    return response.redirect("/signup");
+  }
+
   // Hash password using bcrypt
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   console.log(hashedPwd);
@@ -125,7 +143,10 @@ app.get("/login", (request, response) => {
 
 app.post(
   "/session",
-  passport.authenticate("local", { failureRedirect: "/login" }),
+  passport.authenticate("local", {
+    failureRedirect: "/login",
+    failureFlash: true,
+  }),
   (request, response) => {
     console.log(request.user);
     response.redirect("/todos");
@@ -176,6 +197,14 @@ app.post(
   async (request, response) => {
     console.log("Creating a todo", request.body);
     console.log(request.user);
+    if (request.body.title.length == 0) {
+      request.flash("error", "Invalid title!");
+      return response.redirect("/todos");
+    }
+    if (request.body.dueDate.length == 0) {
+      request.flash("error", "Invalid due Date!");
+      return response.redirect("/todos");
+    }
     // Todo
     try {
       await Todo.addTodo({
