@@ -9,14 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     // eslint-disable-next-line no-unused-vars
     static associate(models) {
+      Todo.belongsTo(models.User, {
+        foreignKey: "userId",
+      });
       // define association here
     }
 
-    static addTodo({ title, dueDate }) {
+    static addTodo({ title, dueDate, userId }) {
       return this.create({
         title,
         dueDate,
         completed: false,
+        userId,
       });
     }
 
@@ -24,53 +28,58 @@ module.exports = (sequelize, DataTypes) => {
     //   return this.update({ completed: true });
     // }
 
-    setCompletionStatus(status) {
-      return this.update({ completed: !status });
+    setCompletionStatus(status, userId) {
+      return this.update({ where: { userId }, completed: !status });
     }
 
-    static async getTodos() {
-      return await this.findAll();
-    }
+    // static async getTodos() {
+    //   return await this.findAll();
+    // }
 
-    static async getOverdueTodos() {
+    static async getOverdueTodos(userId) {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.lt]: new Date().toISOString().split("T")[0] },
+          userId,
           completed: false,
         },
       });
     }
 
-    static async getDueTodayTodods() {
+    static async getDueTodayTodods(userId) {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.eq]: new Date().toISOString().split("T")[0] },
+          userId,
           completed: false,
         },
       });
     }
 
-    static async getDueLaterTodos() {
+    static async getDueLaterTodos(userId) {
       return await Todo.findAll({
         where: {
           dueDate: { [Op.gt]: new Date().toISOString().split("T")[0] },
+          userId,
           completed: false,
         },
       });
     }
 
-    static async getCompletedItems() {
+    static async getCompletedItems(userId) {
       return await Todo.findAll({
         where: {
           completed: true,
+          userId,
         },
       });
     }
 
-    static async remove(id) {
+    static async remove(id, userId) {
       return this.destroy({
         where: {
           id,
+          userId,
         },
       });
     }
