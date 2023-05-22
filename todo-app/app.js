@@ -69,8 +69,10 @@ passport.use(
             return done(null, false, { message: "Invalid Password!" });
           }
         })
-        .catch((error) => {
-          return error;
+        .catch(() => {
+          return done(null, false, {
+            message: "Invalid User Credentials!",
+          });
         });
     }
   )
@@ -92,9 +94,13 @@ passport.deserializeUser((id, done) => {
 });
 
 app.get("/", async (request, response) => {
-  response.render("index", {
-    csrfToken: request.csrfToken(),
-  });
+  if (request.isAuthenticated()) {
+    response.redirect("/todos");
+  } else {
+    response.render("index", {
+      csrfToken: request.csrfToken(),
+    });
+  }
 });
 
 app.get("/signup", (request, response) => {
@@ -112,7 +118,17 @@ app.post("/users", async (request, response) => {
     request.flash("error", "Invalid Email!");
     return response.redirect("/signup");
   }
-
+  if (request.body.password.length < 8) {
+    request.flash("error", "Password should at least contain 8 characters!");
+    return response.redirect("/signup");
+  }
+  const existingUser = await User.findOne({
+    where: { email: request.body.email },
+  });
+  if (existingUser) {
+    request.flash("error", "User exists!");
+    return response.redirect("/signup");
+  }
   // Hash password using bcrypt
   const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   console.log(hashedPwd);
@@ -167,6 +183,7 @@ app.get(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
+    const loggedInUserFirstName = request.user.firstName;
     const loggedInUser = request.user.id;
     const overdue = await Todo.getOverdueTodos(loggedInUser);
     const dueToday = await Todo.getDueTodayTodods(loggedInUser);
@@ -174,6 +191,7 @@ app.get(
     const completedItems = await Todo.getCompletedItems(loggedInUser);
     if (request.accepts("html")) {
       response.render("todos", {
+        loggedInUserFirstName,
         overdue,
         dueToday,
         dueLater,
@@ -197,8 +215,8 @@ app.post(
   async (request, response) => {
     console.log("Creating a todo", request.body);
     console.log(request.user);
-    if (request.body.title.length == 0) {
-      request.flash("error", "Invalid title!");
+    if (request.body.title.length < 5) {
+      request.flash("error", "title must be at least length 5!");
       return response.redirect("/todos");
     }
     if (request.body.dueDate.length == 0) {
